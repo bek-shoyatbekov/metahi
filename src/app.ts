@@ -8,7 +8,6 @@ import { connectDB } from "./utils/database/connectDB";
 import { logRequest } from "./utils/log/log-request";
 import userRouter from "./routes/index";
 
-
 const app: Express = express();
 
 // Connecting MongoDB
@@ -28,6 +27,7 @@ app.use(
     saveUninitialized: true,
   })
 );
+
 
 app.get("/", (req, res) => {
   res.send("Hello World");

@@ -17,7 +17,11 @@ export const login = async (
     if (!username || !image || !firebaseToken) {
       throw new AppError("username ,avatar and firebaseToken required", 400);
     }
+    const isUserNew = await isNewUser(firebaseToken);
 
+    if (!isUserNew) {
+      throw new AppError("User already logged in", 400);
+    }
     // Generate UUID
     const userId = uuidv4();
 
@@ -37,3 +41,12 @@ export const login = async (
     next(err);
   }
 };
+
+async function isNewUser(fcm: string) {
+  const user = await User.findOne({ firebaseToken: fcm });
+  if (user) {
+    return false;
+  } else {
+    return true;
+  }
+}

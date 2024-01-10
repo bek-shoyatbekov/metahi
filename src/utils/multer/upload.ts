@@ -22,7 +22,7 @@ const upload = multer({
       return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
     }
   },
-  limits: { fileSize: 1024 * 2 },
+  limits: { fileSize: 1024 * 1024 * 2 },
 }).single("avatar");
 
 export default upload;

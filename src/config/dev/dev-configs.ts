@@ -8,4 +8,5 @@ export default {
   nodeEnv: process.env.NODE_ENV || "development",
   port: process.env.PORT || 3000,
   mongodbURI: process.env.MONGODB_URI || "mongodb://localhost:27017",
+  sessionSecret: process.env.SESSION_SECRET || "secret",
 } as IConfig;
