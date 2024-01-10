@@ -1,13 +1,13 @@
-FROM node:21-alpine
+FROM node:21-alpine AS base
 
-WORKDIR /app
+WORKDIR /src/app
 
 COPY package*.json ./
 
 RUN npm install
 
 
-FROM image AS test
+FROM base AS test
 
 COPY . .
 
