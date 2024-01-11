@@ -1,5 +1,5 @@
 import firebase from "firebase-admin";
-import { readFile } from "../fs/read-file";
+import { readFile } from "../../utils/fs/read-file";
 
 const serviceAccount = readFile("./firebase-config.json");
 
