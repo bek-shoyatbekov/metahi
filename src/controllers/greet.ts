@@ -10,7 +10,7 @@ export const getAllGreetings = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.query?.userId || req.session?.userId;
+    const userId = req.query?.userId || (req.session as any).userId;
     if (!userId) throw new AppError("User not authenticated.", 400);
 
     const greetings: IGreeting[] = await Greeting.find({

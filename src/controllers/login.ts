@@ -32,10 +32,10 @@ export const login = async (
       avatar: image,
       firebaseToken,
     };
-    const result = await User.create(newUser);
-    req.session.userId = userId;
+    await User.create(newUser);
+    (req.session as any).userId = userId;
     // Directly return userId
-    res.status(200).send(userId);
+    res.status(200).send({ id: userId });
     return;
   } catch (err) {
     next(err);

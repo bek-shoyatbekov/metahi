@@ -1,13 +1,13 @@
+import { GeoPoint } from "../../interfaces/geo-point-interface";
+import { logger } from "../log/logger";
 import { toRadians } from "./to-radians";
 
-interface GeoPoint {
-  latitude: number;
-  longitude: number;
-}
+
 
 function calculateDistance(point1: GeoPoint, point2: GeoPoint): number {
   const earthRadius = 6371.0; // Radius of Earth in kilometers
 
+  
   const lat1 = toRadians(point1.latitude);
   const lon1 = toRadians(point1.longitude);
 
@@ -23,7 +23,15 @@ function calculateDistance(point1: GeoPoint, point2: GeoPoint): number {
 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-  return earthRadius * c;
+  return earthRadius * c * 1000;
 }
+
+// ! Example
+// logger.info(
+//   calculateDistance(
+//     { latitude: 41.308042, longitude: 69.283235 },
+//     { latitude: 41.3078, longitude: 69.282762 }
+//   )
+// );
 
 export default calculateDistance;

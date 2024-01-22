@@ -1,10 +1,11 @@
-import firebase from "firebase-admin";
-import { readFile } from "../../utils/fs/read-file";
+import firebase, { ServiceAccount } from "firebase-admin";
+import { logger } from "../../utils/log/logger";
 
-const serviceAccount = readFile("./firebase-config.json");
+import serviceAccount from "../../../firebase-config.json";
+logger.info(serviceAccount);
 
 firebase.initializeApp({
-  credential: firebase.credential.cert(serviceAccount as string),
+  credential: firebase.credential.cert(serviceAccount as ServiceAccount),
 });
 
 export default firebase;

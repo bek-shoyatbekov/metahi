@@ -20,3 +20,21 @@ export const turnOnOrOffUserOnlineStatus = async (
     next(err);
   }
 };
+
+export const getUserOnlineStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { userId } = req.query;
+    if (!userId) throw new AppError("userId not found", 400);
+    const user = await User.findOne({ id: userId });
+    if (!user) throw new AppError("user not found", 404);
+    res.status(200).send({
+      status: user.isOnline,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
