@@ -15,7 +15,7 @@ export const sendNotification = async (message: IMessage) => {
 
 // ! Test example
 
-const testToken = `fOGBy-U_TUyvgv5Yjzbo4L:APA91bGtP-v3YqX93mwUgQ6V914jd9EqxEjAAq6QRzxq_2xynORPoanbcKmpK6Jpn1a5uTFljWqiimIxPqQrjMyHVYAOSZYAhYu2cqf8jKfWrvN641gdBSIqCf_pwNTs4qVUOphNIZvl`;
+const testToken = ``;
 
 (async () => {
   const message: IMessage = {
