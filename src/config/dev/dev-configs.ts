@@ -9,4 +9,5 @@ export default {
   port: process.env.PORT || 3000,
   mongodbURI: process.env.MONGODB_URI || "mongodb://localhost:27017",
   sessionSecret: process.env.SESSION_SECRET || "secret",
+  greetingInterval: parseInt(process.env.GREETING_INTERVAL as string),
 } as IConfig;

@@ -3,6 +3,7 @@ interface IConfig {
   mongodbURI: string;
   nodeEnv: string;
   sessionSecret: string;
+  greetingInterval: number;
 }
 
 export default IConfig;

@@ -14,7 +14,7 @@ export const getAllGreetings = async (
     if (!userId) throw new AppError("User not authenticated.", 400);
 
     const greetings: IGreeting[] = await Greeting.find({
-      $or: [{ from: userId }, { to: userId }],
+      $or: [{ to: userId }, { from: userId }],
     });
     res.status(200).send(greetings);
     return;

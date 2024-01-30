@@ -6,6 +6,7 @@ import { AppError } from "../../utils/error/app-error";
 import calculateDistance from "../../utils/geo-point/calculate-distance";
 import User from "../../models/user-model";
 import Greeting from "../../models/greeting-model";
+import { checkIfUserCanGreet } from "../../utils/limit/check-if-user-can-greet";
 
 let onlineUsers: IOnlineUser[] = [];
 
@@ -145,9 +146,14 @@ export class SocketIOService {
     socket.on("greet", async (data) => {
       try {
         const { from, to, message } = data;
+
         const fromUser = onlineUsers.find((u) => u.userId === from);
         const toUser = onlineUsers.find((u) => u.userId === to);
         if (!fromUser || !toUser) throw new AppError("No such user", 400);
+
+        const userCanGreet = await checkIfUserCanGreet(from, to);
+        if (!userCanGreet) throw new AppError("limited", 400);
+
         const greeting = await Greeting.create({
           from: fromUser.userId,
           to: toUser.userId,
@@ -165,7 +171,7 @@ export class SocketIOService {
 
   private handleError(err: any, socketId: string) {
     logger.error(err);
-    this.io.to(socketId).emit("error", err?.message);
+    this.io.to(socketId).emit("error", { message: err?.message });
   }
 
   private onDisconnection(socket: Socket) {
