@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io";
 
+import Relatives from "../../models/relatives-model";
 import { logger } from "../../utils/log/logger";
 import { IOnlineUser } from "../../interfaces/online-user-interface";
 import { AppError } from "../../utils/error/app-error";
@@ -90,12 +91,26 @@ export class SocketIOService {
   }
 
   getUsers(socket: Socket) {
-    socket.on("users", (data) => {
+    socket.on("users", async (data) => {
       try {
         const { maxDistance, userId } = data;
+
         const user = onlineUsers.find((u) => u.userId === userId);
         if (!user) throw new AppError("No such user", 400);
-        const nearby = this.filterUserOnDistance(user.userId, maxDistance);
+        const relativeOnlineUsers = await this.filterUsersByCommonContacts(
+          userId,
+          onlineUsers
+        );
+
+        if (!relativeOnlineUsers) {
+          throw new AppError("No such relative users", 400);
+        }
+        const nearby = this.filterUserOnDistance(
+          user.userId,
+          maxDistance,
+          relativeOnlineUsers
+        );
+
         socket.emit("users", nearby);
       } catch (err) {
         this.handleError(err, socket.id);
@@ -103,19 +118,20 @@ export class SocketIOService {
     });
   }
 
-  private filterUserOnDistance(userId: string, maxDistance: number) {
-    const users = onlineUsers.filter(
-      (u) => u.userId !== userId && u.online === true
-    );
+  private filterUserOnDistance(
+    userId: string,
+    maxDistance: number,
+    onlineRelativeUsers: IOnlineUser[]
+  ) {
+    let users = onlineRelativeUsers.filter((u) => u.online === true);
 
     const user = onlineUsers.filter((u) => u.userId === userId)[0];
     const nearby = users.filter((u) => {
-      logger.debug({ u });
       const distance = calculateDistance(
         { latitude: u.lat! as number, longitude: u.long! as number },
         { latitude: user.lat! as number, longitude: user.long! as number }
       );
-      logger.info(distance);
+
       return distance <= maxDistance;
     });
 
@@ -169,8 +185,29 @@ export class SocketIOService {
     });
   }
 
+  private async filterUsersByCommonContacts(
+    userId: string,
+    onlineUsers: IOnlineUser[]
+  ) {
+    try {
+      const userRelatives = await Relatives.findOne({ userId });
+      if (!userRelatives) return [];
+      const OnlineRelatives = [];
+
+      for (let i = 0; i < userRelatives.relatives.length; i++) {
+        const user = onlineUsers.find(
+          (u) => u.userId === userRelatives.relatives[i]
+        );
+        if (user) OnlineRelatives.push(user);
+      }
+
+      return OnlineRelatives;
+    } catch (err) {
+      logger.error(err);
+    }
+  }
+
   private handleError(err: any, socketId: string) {
-    logger.error(err);
     this.io.to(socketId).emit("error", { message: err?.message });
   }
 

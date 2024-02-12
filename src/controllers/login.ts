@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import User from "../models/user-model";
 import IUser from "../interfaces/user-interface";
 import { AppError } from "../utils/error/app-error";
+import { logger } from "../utils/log/logger";
 
 export const login = async (
   req: Request,
@@ -10,9 +11,10 @@ export const login = async (
   next: NextFunction
 ) => {
   try {
-    const { username } = req.body;
-    const image = req.file?.filename;
+    const { username, contacts } = req.body;
+    const image = req.file?.filename || req.body?.avatar;
     const firebaseToken = req.body.firebaseToken;
+    console.log("Req body", image);
 
     if (!username || !image || !firebaseToken) {
       throw new AppError("username ,avatar and firebaseToken required", 400);
