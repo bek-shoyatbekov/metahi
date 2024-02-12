@@ -15,16 +15,16 @@ export const sendNotification = async (message: IMessage) => {
 
 // ! Test example
 
-const testToken = ``;
+// const testToken = ``;
 
-(async () => {
-  const message: IMessage = {
-    notification: {
-      title: "Test",
-      body: "Something",
-    },
-    token: testToken,
-  };
-  // Send Notification
-  await sendNotification(message);
-})();
+// (async () => {
+//   const message: IMessage = {
+//     notification: {
+//       title: "Test",
+//       body: "Something",
+//     },
+//     token: testToken,
+//   };
+//   // Send Notification
+//   await sendNotification(message);
+// })();
