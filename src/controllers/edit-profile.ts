@@ -16,9 +16,6 @@ const editProfile = async (req: Request, res: Response, next: NextFunction) => {
     const user = await User.findOne({ id: userId });
     if (!user) throw new AppError("User not found", 400);
 
-    console.log("Old avatar", user.avatar);
-    console.log("New avatar", avatar);
-    console.log("is avatar", isAvatar);
     if (user.avatar != avatar && !isAvatar) {
       const oldAvatarPath = join("public", `${user.avatar}`);
       await deleteFile(oldAvatarPath);

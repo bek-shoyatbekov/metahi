@@ -82,7 +82,6 @@ export class SocketIOService {
         const user = onlineUsers.find((u) => u.userId === userId);
         if (!user) throw new AppError("No such user", 400);
         user.online = online;
-        logger.info(user);
         socket.emit("success", true);
       } catch (err) {
         this.handleError(err, socket.id);
@@ -146,7 +145,6 @@ export class SocketIOService {
         if (!user) throw new AppError("No such user", 400);
         user.lat = lat;
         user.long = long;
-        logger.info(user);
         socket.emit("success", true);
       } catch (err) {
         this.handleError(err, socket.id);
@@ -175,8 +173,7 @@ export class SocketIOService {
           to: toUser.userId,
           message,
         });
-        const result = await greeting.save();
-        logger.info(result);
+        await greeting.save();
         this.io.to(toUser.socketId).emit("greet", { fromUser, message });
         socket.emit("success", true);
       } catch (err) {

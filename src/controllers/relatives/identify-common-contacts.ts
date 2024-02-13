@@ -38,8 +38,6 @@ export const identifyCommonUserContacts = async (
       await user.save();
     }
 
-    console.log("Related users", relatedUsers);
-
     for (let anotherUser of relatedUsers) {
       if (anotherUser.relatives.filter((u) => u === userId).length === 0) {
         anotherUser.relatives.push(userId);
